@@ -6,7 +6,7 @@ const Intern = require(`./lib/Intern`)
 const Manager = require(`./lib/Manager`)
 //empty array to be populated based on user input with class info
 let employeeRoster = []
-
+// template for manager card
 const managerCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -19,6 +19,7 @@ const managerCard = employee => {
     </ul>
     </div></div>`
 }
+//template for engineer cad
 const engineerCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -31,6 +32,7 @@ const engineerCard = employee => {
     </ul>
     </div></div>`
 }
+// template for intern card
 const internCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -43,29 +45,8 @@ const internCard = employee => {
     </ul>
     </div></div>`
 }
-
-const renderCards = employeeRoster => {
-    let cardArray = []
-    employeeRoster.forEach(employee => {
-        const role = employee.getRole()
-        if(role === `Manager`){
-           const managerInfo = managerCard(employee)
-           cardArray.push(managerInfo)
-        }
-        if(role === `Engineer`){
-           const engineerInfo = engineerCard(employee)
-           cardArray.push(engineerInfo)
-        }
-        if(role === `Intern`){
-          const internInfo = internCard(employee)
-          cardArray.push(internInfo)
-        }})
-    const cards = cardArray.join(``)   
-    const displayCards = renderHMTL(cards)
-    return displayCards
-}
-
-const renderHMTL = cards => {
+// helper function to build html doc
+const renderHTML = cards => {
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -85,7 +66,28 @@ const renderHMTL = cards => {
     </body>
     </html>`
 }
-
+//function to build html doc using previous templates
+const renderCards = employeeRoster => {
+    let cardArray = [] 
+    employeeRoster.forEach(employee => {
+        const role = employee.getRole()
+        if(role === `Manager`){
+           const managerInfo = managerCard(employee)
+           cardArray.push(managerInfo)
+        }
+        if(role === `Engineer`){
+           const engineerInfo = engineerCard(employee)
+           cardArray.push(engineerInfo)
+        }
+        if(role === `Intern`){
+          const internInfo = internCard(employee)
+          cardArray.push(internInfo)
+        }})
+    const cards = cardArray.join(``)   
+    const displayCards = renderHTML(cards)
+    return displayCards
+}
+// prompt for manager
 function init() {
     inquirer.prompt([
         {
@@ -100,7 +102,7 @@ function init() {
         },
         {
             type: `input`,
-            name: `e-mail`,
+            name: `email`,
             message: `please enter team manager's email: `
         },
         {
@@ -113,11 +115,12 @@ function init() {
         let currEmail = data.email
         let currId = data.id
         let currOfficeNum = data.officeNumber
-        const currManager = new Manager(currName, currId, currEmail, currOfficeNum)
+        const currManager = new Manager(currName, currId, currEmail, currOfficeNum) //populate manager class with user input
         employeeRoster.push(currManager)
         employeePrompt()
     })
 }
+// additional prompt for 
 function employeePrompt(){
     inquirer.prompt([
         {
@@ -125,89 +128,106 @@ function employeePrompt(){
             name: `role`,
             message: `employee's role`,
             choices: ['Engineer', `Intern`, `Finished Building Team`]
-        },
-        {
-            type: `input`,
-            name: `name`,
-            message: `employee's name`
-        },
-        {
-            type: `input`,
-            name: `id`,
-            message: `employee's id`
-        },
-        {
-            type: `input`,
-            name: `email`,
-            message: `employee's email`
-        }
-    ]).then((data)=>{
-        let currName = data.name
-        let currEmail = data.email
-        let currId = data.id
-        if(data.role === `Engineer`) {
-            inquirer
-                .prompt([
-                    {
-                        type: `input`,
-                        name: `github`,
-                        message: `engineer's github`
-                    },
-                    {
-                        type: `confirm`,
-                        name: `addMore`,
-                        message: `Add more employees?`,
-                        default: false
-                    }
-                ]).then((data) => {
-                    let currGithub = data.github
-                    let moreEmploy = data.addMore
-                    let currEngineer = new Engineer(currName, currId, currEmail, currGithub)
-                    employeeRoster.push(currEngineer)
-                    if (moreEmploy) {
-                        return employeePrompt()
-                    } else {
-                        fs.writeFile('index.html', generateHTML(teamMembers), (err) =>
-                            err ? console.log(err) : console.log(`You've successfully created index.html!`)
-                        )
-                    }
-                })
-        }
-        if(data.role === `Intern`) {
-            inquirer
-                .prompt([
-                    {
-                        type: `input`,
-                        name: `school`,
-                        message: `engineer's github`
-                    },
-                    {
-                        type: `confirm`,
-                        name: `addMore`,
-                        message: `Add more employees?`,
-                        default: false
-                    }
-                ]).then((data) => {
-                    let currSchool = data.school
-                    let moreEmploy = data.addMore
-                    let currEngineer = new Engineer(currName, currId, currEmail, currSchool)
-                    employeeRoster.push(currIntern)
-                    if (moreEmploy) {
-                        return employeePrompt()
-                    } else {
-                        fs.writeFile('index.html', generateHTML(teamMembers), (err) =>
-                            err ? console.log(err) : console.log(`You've successfully created index.html!`)
-                        )
-                    }
-                })
-        }
-        if(data.role === `Finished Building Team`){
-            fs.writeFile('index.html', generateHTML(teamMembers), (err) =>
-            err ? console.log(err) : console.log(`You've successfully created index.html!`)
-        )
+        }]).then((data)=>{
+            
+            if(data.role === `Finished Building Team`){
+                 fs.writeFile('index.html', renderCards(employeeRoster), (err) =>
+                    err ? console.log(err) : console.log(`You've successfully created index.html!`))
+        } else {
 
-        }
-        
+            if(data.role === `Engineer`) {
+                inquirer
+                    .prompt([
+                        {
+                            type: `input`,
+                            name: `name`,
+                             message: `Please enter ${data.role.trim()}'s name: `
+                        },
+                        {
+                            type: `input`,
+                            name: `id`,
+                            message: `Please enter ${data.role.trim()}'s id`
+                        },
+                        {
+                            type: `input`,
+                            name: `email`,
+                            message: `Please enter ${data.role.trim()}'s email: `
+                        },
+                        {
+                            type: `input`,
+                            name: `github`,
+                            message: `Please enter ${data.role.trim()}'s github user name: `
+                        },
+                        {
+                            type: `confirm`,
+                            name: `addMore`,
+                            message: `Add more employees?`,
+                            default: false
+                        }
+                    ]).then((data) => {
+                        let currName = data.name
+                        let currEmail = data.email
+                        let currId = data.id
+                        let currGithub = data.github
+                        let moreEmploy = data.addMore
+                        let currEngineer = new Engineer(currName, currId, currEmail, currGithub)
+                    employeeRoster.push(currEngineer)
+                        if (moreEmploy) {
+                            return employeePrompt()
+                        } else {
+                            fs.writeFile('index.html', renderCards(employeeRoster), (err) =>
+                                err ? console.log(err) : console.log(`You've successfully created index.html!`)
+                            )
+                        }
+                    })
+            }
+            if(data.role === `Intern`) {
+                inquirer
+                    .prompt([
+                        {
+                            type: `input`,
+                            name: `name`,
+                            message: `Please enter ${data.role.trim()}'s name: `
+                        },
+                        {
+                            type: `input`,
+                            name: `id`,
+                            message: `Please enter ${data.role.trim()}'s id: `
+                        },
+                        {
+                            type: `input`,
+                            name: `email`,
+                            message: `Please eneter ${data.role.trim()}'s email`
+                        },
+                        {
+                            type: `input`,
+                            name: `school`,
+                            message: `please enter ${data.role.trim()}'s school`
+                        },
+                        {
+                            type: `confirm`,
+                            name: `addMore`,
+                            message: `Add more employees?`,
+                            default: false
+                        }
+                    ]).then((data) => {
+                        let currName = data.name
+                        let currEmail = data.email
+                        let currId = data.id
+                        let currSchool = data.school
+                        let moreEmploy = data.addMore
+                        let currIntern = new Intern(currName, currId, currEmail, currSchool)
+                        employeeRoster.push(currIntern)
+                        if (moreEmploy) {
+                            return employeePrompt()
+                        } else {
+                            fs.writeFile('index.html', renderCards(employeeRoster), (err) =>
+                                err ? console.log(err) : console.log(`You've successfully created index.html!`)
+                            )
+                        }
+                    })
+            }
+        }        
     })
 }
  init()
