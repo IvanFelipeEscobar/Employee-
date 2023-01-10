@@ -21,7 +21,7 @@ Using CLI answer the questions asked and the application will generate the a pro
 
 [Github Repo](https://github.com/IvanFelipeEscobar/Employee-Card-Generator)
 
-![Application Video](./Untitled_%20Jan%203%2C%202023%202_52%20PM.webm)
+![Application Video](./walkthru.webm)
 
 ## Credits
 
