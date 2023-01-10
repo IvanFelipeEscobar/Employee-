@@ -1,4 +1,4 @@
-# Emplyee Card Generator
+# Employee Card Generator
 
 ## Description
 
