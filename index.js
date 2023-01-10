@@ -11,7 +11,7 @@ const managerCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">${employee.getName()}</h5>
-      <h5 class="card-title">${employee.getRole()}</h5>
+      <h6 class="card-title">${employee.getRole()}</h6>
       <ul class="list-group list-group-flush">
       <li class="list-group-item">${employee.getId()}</li>
       <li class="list-group-item"><a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
@@ -24,7 +24,7 @@ const engineerCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">${employee.getName()}</h5>
-      <h5 class="card-title">${employee.getRole()}</h5>
+      <h6 class="card-title">${employee.getRole()}</h6>
       <ul class="list-group list-group-flush">
       <li class="list-group-item">${employee.getId()}</li>
       <li class="list-group-item"><a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
@@ -37,7 +37,7 @@ const internCard = employee => {
     return `<div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">${employee.getName()}</h5>
-      <h5 class="card-title">${employee.getRole()}</h5>
+      <h6 class="card-title">${employee.getRole()}</h6>
       <ul class="list-group list-group-flush">
       <li class="list-group-item">${employee.getId()}</li>
       <li class="list-group-item"><a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a></li>
@@ -54,6 +54,14 @@ const renderHTML = cards => {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <style>
+        .a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 6px;
+        }
+        </style>
         <title>Employee Cards</title>
     </head>
     <body>
@@ -62,7 +70,7 @@ const renderHTML = cards => {
               <h1>My Team</h1>
             </div>
           </nav>
-        <div>${cards}</div>  
+        <div class="a">${cards}</div>  
     </body>
     </html>`
 }
@@ -120,7 +128,7 @@ function init() {
         employeePrompt()
     })
 }
-// additional prompt for 
+// additional prompt for adding employees
 function employeePrompt(){
     inquirer.prompt([
         {
@@ -129,12 +137,12 @@ function employeePrompt(){
             message: `employee's role`,
             choices: ['Engineer', `Intern`, `Finished Building Team`]
         }]).then((data)=>{
-            
+            // if finished building team selected file will be generated
             if(data.role === `Finished Building Team`){
                  fs.writeFile('index.html', renderCards(employeeRoster), (err) =>
                     err ? console.log(err) : console.log(`You've successfully created index.html!`))
         } else {
-
+//prompt for engineer
             if(data.role === `Engineer`) {
                 inquirer
                     .prompt([
@@ -181,6 +189,7 @@ function employeePrompt(){
                         }
                     })
             }
+            //prompt for intern
             if(data.role === `Intern`) {
                 inquirer
                     .prompt([
@@ -230,7 +239,8 @@ function employeePrompt(){
         }        
     })
 }
- init()
+// funtion call to initialize app
+init()
 
 
 
