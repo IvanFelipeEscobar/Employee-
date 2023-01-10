@@ -6,9 +6,14 @@ Simple Node.JS CLI application takes in user input about employees on a software
 
 ## Installation
 
-```md
-Clone this Repo into an empty file in your local machine then run command  `nmp i` to install dependencies, then start application with command `npm start`. To run unit testing use `npm test`.
-```
+Clone this Repo into an empty file in your local machine 
+
+run command  `nmp i` to install dependencies, 
+
+start application with command `npm start`. 
+
+To run unit testing use `npm test`.
+
 
 ## Usage
 
