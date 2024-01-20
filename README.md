@@ -21,8 +21,6 @@ Using CLI answer the questions asked and the application will generate the a pro
 
 [Github Repo](https://github.com/IvanFelipeEscobar/Employee-Card-Generator)
 
-![Application Video](./walkthru.webm)
-
 ## Credits
 
 Application made by Ivan Felipe Escobar using Inquirer and Jest
